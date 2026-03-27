@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="app.title">CRM Dashboard - Settings</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+</head>
+<body>
+
+    <div class="layout">
+        <!-- Sidebar Dinâmica -->
+        <div id="sidebar-placeholder"></div>
+
+        <main class="main-content">
+            <!-- Topbar Dinâmica -->
+            <div id="topbar-placeholder"></div>
+
+            <div class="page-header">
+                <h1 class="page-title" data-i18n="settings.title">System Settings</h1>
+            </div>
+
+            <div class="settings-grid">
+                <!-- EXPORT BACKUP CARD -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon icon-blue"><span class="iconify" data-icon="ph:download-simple-fill"></span></div>
+                        <div>
+                            <div class="card-title" data-i18n="settings.backupTitle">Data Backup</div>
+                            <div class="card-desc" data-i18n="settings.backupDesc">Export all your CRM data (Clients, Leads, Deals, Tasks, etc.) into a single secure JSON file. Keep this safe!</div>
+                        </div>
+                    </div>
+                    <button class="btn-primary" id="btnExportBackup" style="width: 100%; justify-content: center; padding: 14px;">
+                        <span class="iconify" data-icon="ph:file-arrow-down-fill" style="font-size: 20px;"></span> 
+                        <span data-i18n="settings.btnExport">Download Full Backup</span>
+                    </button>
+                </div>
+
+                <!-- IMPORT RESTORE CARD -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon icon-red"><span class="iconify" data-icon="ph:upload-simple-fill"></span></div>
+                        <div>
+                            <div class="card-title" data-i18n="settings.restoreTitle">Restore Data</div>
+                            <div class="card-desc" data-i18n="settings.restoreDesc">Upload a previously exported JSON backup file. WARNING: This will overwrite your current database.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="upload-zone" id="uploadZone">
+                        <span class="iconify" data-icon="ph:file-text-fill"></span>
+                        <p style="font-weight: 600; color: var(--text-main); font-size: 15px;" data-i18n="settings.dragDrop">Drag & Drop JSON file here</p>
+                        <p style="font-size: 12px; margin-top: 4px;" data-i18n="settings.clickBrowse">or click to browse</p>
+                        <input type="file" id="backupFileInput" accept=".json" hidden>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-grid">
+                 <!-- DANGER ZONE CARD -->
+                 <div class="card" style="border-color: rgba(238, 93, 80, 0.3);">
+                    <div class="card-header">
+                        <div class="card-icon icon-red"><span class="iconify" data-icon="ph:warning-circle-fill"></span></div>
+                        <div>
+                            <div class="card-title" style="color: var(--danger);" data-i18n="settings.dangerTitle">Danger Zone</div>
+                            <div class="card-desc" data-i18n="settings.dangerDesc">Permanently delete all data from your local database. This action cannot be reversed.</div>
+                        </div>
+                    </div>
+                    <button class="btn-primary" id="btnWipeData" style="width: 100%; justify-content: center; padding: 14px; background: transparent; border: 1px solid var(--danger); color: var(--danger);">
+                        <span class="iconify" data-icon="ph:trash-fill" style="font-size: 20px;"></span> 
+                        <span data-i18n="settings.btnWipe">Wipe All Data</span>
+                    </button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="js/data.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/settings.js"></script>
+</body>
+</html>

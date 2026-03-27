@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="app.title">CRM Dashboard - Tasks</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+</head>
+<body>
+
+    <div class="layout">
+        <!-- Sidebar Dinâmica -->
+        <div id="sidebar-placeholder"></div>
+
+        <main class="main-content">
+            <!-- Topbar Dinâmica -->
+            <div id="topbar-placeholder"></div>
+
+            <div class="page-header">
+                <h1 class="page-title" data-i18n="tasks.title">Task Management</h1>
+                <button class="btn-primary" id="btnOpenAddTask"><span class="iconify" data-icon="ph:plus-bold"></span> <span data-i18n="tasks.addBtn">Add Task</span></button>
+            </div>
+
+            <div class="filters-container">
+                <input type="text" id="searchTask" class="filter-input" data-i18n-placeholder="tasks.searchPlaceholder" placeholder="Search tasks..." style="width: 250px;">
+                
+                <div class="custom-dropdown" id="statusFilterDropdown" data-current-value="All" style="width: 180px;">
+                    <div class="dropdown-header"><span data-i18n="tasks.filterStatusAll">All Statuses</span> <span class="iconify" data-icon="ph:caret-down-fill"></span></div>
+                    <div class="dropdown-list">
+                        <div data-value="All" data-i18n="tasks.filterStatusAll">All Statuses</div>
+                        <div data-value="Pending">Pending</div>
+                        <div data-value="Done">Done</div>
+                    </div>
+                </div>
+
+                <div class="custom-dropdown" id="priorityFilterDropdown" data-current-value="All" style="width: 180px;">
+                    <div class="dropdown-header"><span data-i18n="tasks.filterPriorityAll">All Priorities</span> <span class="iconify" data-icon="ph:caret-down-fill"></span></div>
+                    <div class="dropdown-list">
+                        <div data-value="All" data-i18n="tasks.filterPriorityAll">All Priorities</div>
+                        <div data-value="High">High</div>
+                        <div data-value="Medium">Medium</div>
+                        <div data-value="Low">Low</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th data-i18n="tasks.colTask">Task Details</th>
+                            <th data-i18n="tasks.colPriority">Priority</th>
+                            <th data-i18n="tasks.colDue">Due Date</th>
+                            <th data-i18n="tasks.colStatus">Status</th>
+                            <th data-i18n="tasks.colAction">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tasksTableBody">
+                        <!-- Tasks injetadas via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- MODAL CRUD TASKS -->
+    <div class="modal-overlay" id="crudTaskModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3 class="modal-title"><span class="iconify" data-icon="ph:check-square-fill"></span> Create New Task</h3>
+                <button class="btn-close" id="closeTaskModal"><span class="iconify" data-icon="ph:x-bold"></span></button>
+            </div>
+            <div class="modal-body">
+                <form id="formCreateTask">
+                    <input type="hidden" id="taskId" value="">
+
+                    <div class="form-group">
+                        <label class="form-label">Task Title</label>
+                        <input type="text" id="taskTitle" class="form-control" placeholder="e.g. Call Alice regarding contract" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Associated Client (Optional)</label>
+                        <div class="custom-dropdown" id="taskClientDropdown" data-current-value="">
+                            <div class="dropdown-header"><span>-- No Client (Internal Task) --</span> <span class="iconify" data-icon="ph:caret-down-fill"></span></div>
+                            <div class="dropdown-list" id="taskClientList"></div>
+                        </div>
+                        <input type="hidden" id="taskClientSelect" value="">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Due Date</label>
+                            <input type="date" id="taskDate" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Priority</label>
+                            <div class="custom-dropdown" id="taskPriorityDropdown" data-current-value="Medium">
+                                <div class="dropdown-header"><span>Medium</span> <span class="iconify" data-icon="ph:caret-down-fill"></span></div>
+                                <div class="dropdown-list">
+                                    <div data-value="High">High</div>
+                                    <div data-value="Medium">Medium</div>
+                                    <div data-value="Low">Low</div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="taskPriority" value="Medium">
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 40px; display: flex; justify-content: flex-end; gap: 16px;">
+                        <button type="button" class="btn-outline" id="cancelTaskBtn">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Task</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/tasks.js"></script>
+</body>
+</html>

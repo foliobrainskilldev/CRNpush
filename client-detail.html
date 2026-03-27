@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="app.title">Client Profile - NexusCRM</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+</head>
+<body>
+
+    <div class="layout">
+        <!-- Sidebar Dinâmica -->
+        <div id="sidebar-placeholder"></div>
+
+        <main class="main-content">
+            <!-- Topbar Dinâmica -->
+            <div id="topbar-placeholder"></div>
+
+            <a href="clients.html" class="btn-back">
+                <span class="iconify" data-icon="ph:arrow-left-bold"></span> 
+                <span data-i18n="clientDetail.back">Back to Clients</span>
+            </a>
+
+            <div class="page-header">
+                <div class="client-header-info">
+                    <div class="client-avatar" id="clientInitials"></div>
+                    <div>
+                        <h1 class="page-title" id="clientNameHeader">Loading...</h1>
+                        <span id="clientStatusBadge" class="badge">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-grid">
+                
+                <div>
+                    <div class="card" style="margin-bottom: 24px;">
+                        <div class="card-header" data-i18n="clientDetail.contactInfo">Contact Information</div>
+                        <ul class="detail-list">
+                            <li>
+                                <label data-i18n="clientDetail.mainContact">Main Contact</label>
+                                <p><span class="iconify" data-icon="ph:user-circle-fill"></span> <span id="clientContact">--</span></p>
+                            </li>
+                            <li>
+                                <label data-i18n="clientDetail.emailAddress">Email Address</label>
+                                <p><span class="iconify" data-icon="ph:envelope-simple-fill"></span> <span id="clientEmail">--</span></p>
+                            </li>
+                            <li>
+                                <label data-i18n="clientDetail.phoneNumber">Phone Number</label>
+                                <p><span class="iconify" data-icon="ph:phone-fill"></span> <span id="clientPhone">--</span></p>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header" data-i18n="clientDetail.documents">Documents & Files</div>
+                        <div class="upload-zone" id="uploadZone">
+                            <span class="iconify" data-icon="ph:upload-simple-fill"></span>
+                            <p style="font-weight: 600; color: var(--text-main);" data-i18n="clientDetail.dragDrop">Drag & Drop files here</p>
+                            <p style="font-size: 12px; margin-top: 4px;">PDF, DOCX, JPG (Max 5MB)</p>
+                            <input type="file" id="fileInput" hidden multiple>
+                        </div>
+                        <div class="file-list" id="fileList"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="card" style="margin-bottom: 24px;">
+                        <div class="card-header" data-i18n="clientDetail.timeline">Activity Timeline</div>
+                        
+                        <div class="timeline-filters" id="timelineFilters">
+                            <button class="filter-btn active" data-filter="all" data-i18n="clientDetail.filterAll">All</button>
+                            <button class="filter-btn" data-filter="note" data-i18n="clientDetail.filterNotes">Notes</button>
+                            <button class="filter-btn" data-filter="email" data-i18n="clientDetail.filterEmails">Emails</button>
+                            <button class="filter-btn" data-filter="call" data-i18n="clientDetail.filterCalls">Calls</button>
+                        </div>
+
+                        <form class="add-note-box" id="formAddNote">
+                            <textarea class="note-input" id="newNoteText" data-i18n-placeholder="clientDetail.notePlaceholder" placeholder="Write a note, log a call..." required></textarea>
+                            <button type="submit" class="btn-send"><span class="iconify" data-icon="ph:paper-plane-right-fill"></span></button>
+                        </form>
+
+                        <div class="timeline" id="clientTimeline"></div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                        <div class="card">
+                            <div class="card-header" data-i18n="clientDetail.activeDeals">Active Deals</div>
+                            <ul class="mini-list" id="clientDealsList"></ul>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" data-i18n="clientDetail.pendingTasks">Pending Tasks</div>
+                            <ul class="mini-list" id="clientTasksList"></ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container"></div>
+
+    <script src="js/data.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/client-detail.js"></script>
+</body>
+</html>

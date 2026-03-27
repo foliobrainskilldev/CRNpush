@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="app.title">CRM Dashboard - Leads</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+</head>
+<body>
+
+    <div class="layout">
+        <!-- Sidebar injetada dinamicamente pelo app.js -->
+        <div id="sidebar-placeholder"></div>
+
+        <main class="main-content">
+            <!-- Topbar injetada dinamicamente pelo app.js -->
+            <div id="topbar-placeholder"></div>
+
+            <div class="page-header">
+                <h1 class="page-title" data-i18n="leads.title">Leads Pipeline</h1>
+                <div class="header-controls">
+                    <button class="btn-outline" id="btnExportLeadsCSV" title="Export Leads to CSV">
+                        <span class="iconify" data-icon="ph:file-csv-fill"></span> Export CSV
+                    </button>
+                    
+                    <button class="btn-primary" id="btnOpenAddLead">
+                        <span class="iconify" data-icon="ph:plus-bold"></span> <span data-i18n="leads.addBtn">Add Lead</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="filters-container">
+                <input type="text" id="searchLead" class="filter-input" data-i18n-placeholder="leads.searchPlaceholder" placeholder="Search by name or company..." style="width: 250px;">
+                
+                <div class="custom-dropdown" id="statusFilterDropdown" data-current-value="All" style="width: 200px;">
+                    <div class="dropdown-header"><span data-i18n="leads.filterAll">All Statuses</span> <span class="iconify" data-icon="ph:caret-down-fill"></span></div>
+                    <div class="dropdown-list">
+                        <div data-value="All" data-i18n="leads.filterAll">All Statuses</div>
+                        <div data-value="New">New</div>
+                        <div data-value="Contacted">Contacted</div>
+                        <div data-value="Qualified">Qualified</div>
+                        <div data-value="Lost">Lost</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th data-i18n="leads.colName">Lead Info</th>
+                            <th data-i18n="leads.colSource">Source</th>
+                            <th data-i18n="leads.colInterest">Interest</th>
+                            <th data-i18n="leads.colValue">Est. Value</th>
+                            <th data-i18n="leads.colStatus">Status</th>
+                            <th data-i18n="leads.colActions">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leadsTableBody">
+                        <!-- Gerado via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- MODAL EXPORTAR CSV (Painel Lateral / Drawer) -->
+    <div class="modal-overlay" id="exportCsvModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><span class="iconify" data-icon="ph:file-csv-fill"></span> Export CSV Data</h3>
+                <button class="btn-close" id="closeExportModal"><span class="iconify" data-icon="ph:x-bold"></span></button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-muted); font-size: 15px; margin-bottom: 24px;" id="exportModalText">Name your file to save your leads data offline.</p>
+                <div class="form-group">
+                    <label class="form-label">File Name</label>
+                    <input type="text" id="csvFileNameInput" class="form-control" placeholder="e.g. NexusCRM_Data">
+                </div>
+                <div style="margin-top: 32px; display: flex; justify-content: flex-end; gap: 16px;">
+                    <button class="btn-outline" id="cancelExportBtn">Cancel</button>
+                    <button class="btn-primary" id="confirmExportBtn"><span class="iconify" data-icon="ph:download-simple-fill"></span> Download</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CRUD LEADS (Painel Lateral / Drawer) -->
+    <div class="modal-overlay" id="crudLeadModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3 class="modal-title" id="leadModalTitle"><span class="iconify" data-icon="ph:magnet-fill"></span> Add New Lead</h3>
+                <button class="btn-close" id="closeLeadModal"><span class="iconify" data-icon="ph:x-bold"></span></button>
+            </div>
+            <div class="modal-body">
+                <form id="formCreateLead">
+                    <input type="hidden" id="hiddenLeadId" value="">
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Contact Name</label>
+                            <input type="text" id="leadName" class="form-control" placeholder="e.g. John Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Company Name</label>
+                            <input type="text" id="leadCompany" class="form-control" placeholder="e.g. Stark Industries" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Source</label>
+                            <div class="custom-dropdown" id="leadSourceDropdown" data-current-value="Website">
+                                <div class="dropdown-header"><span>Website</span> <span class="iconify" data-icon="ph:caret-down-fill"></span></div>
+                                <div class="dropdown-list">
+                                    <div data-value="Website">Website</div>
+                                    <div data-value="Referral">Referral</div>
+                                    <div data-value="Social">Social Media</div>
+                                    <div data-value="Cold Call">Cold Call</div>
+                                    <div data-value="Events">Events</div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="leadSource" value="Website">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Estimated Value ($)</label>
+                            <input type="number" id="leadValue" class="form-control" placeholder="5000" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Product Interest</label>
+                            <input type="text" id="leadInterest" class="form-control" placeholder="e.g. Pro Plan, API access" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Initial Status</label>
+                            <div class="custom-dropdown" id="leadStatusDropdown" data-current-value="New">
+                                <div class="dropdown-header"><span>New</span> <span class="iconify" data-icon="ph:caret-down-fill"></span></div>
+                                <div class="dropdown-list">
+                                    <div data-value="New">New</div>
+                                    <div data-value="Contacted">Contacted</div>
+                                    <div data-value="Qualified">Qualified</div>
+                                    <div data-value="Lost">Lost</div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="leadStatus" value="New">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Phone Number (Optional)</label>
+                            <input type="tel" id="leadPhone" class="form-control" placeholder="+351 912345678">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email (Optional)</label>
+                            <input type="email" id="leadEmail" class="form-control" placeholder="john@stark.com">
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 40px; display: flex; justify-content: flex-end; gap: 16px;">
+                        <button type="button" class="btn-outline" id="cancelLeadBtn">Cancel</button>
+                        <button type="submit" class="btn-primary" id="saveLeadBtn">Save Lead</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="js/data.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/leads.js"></script>
+</body>
+</html>

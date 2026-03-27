@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="app.title">CRM Dashboard - Products</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+</head>
+<body>
+
+    <div class="layout">
+        <!-- Sidebar Dinâmica -->
+        <div id="sidebar-placeholder"></div>
+
+        <main class="main-content">
+            <!-- Topbar Dinâmica -->
+            <div id="topbar-placeholder"></div>
+
+            <div class="page-header">
+                <h1 class="page-title" data-i18n="products.title">Products & Services</h1>
+                <div class="header-controls">
+                    <button class="btn-outline" id="btnExportProductsCSV" title="Export Products to CSV">
+                        <span class="iconify" data-icon="ph:file-csv-fill"></span> Export CSV
+                    </button>
+                    <button class="btn-primary" id="btnOpenAddProduct">
+                        <span class="iconify" data-icon="ph:plus-bold"></span> <span data-i18n="products.addBtn">Add Product</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="filters-container">
+                <input type="text" id="searchProduct" class="filter-input" data-i18n-placeholder="products.searchPlaceholder" placeholder="Search by name or SKU..." style="width: 250px;">
+                
+                <div class="custom-dropdown" id="categoryFilterDropdown" data-current-value="All" style="width: 200px;">
+                    <div class="dropdown-header"><span>All Categories</span> <span class="iconify" data-icon="ph:caret-down-fill"></span></div>
+                    <div class="dropdown-list">
+                        <div data-value="All">All Categories</div>
+                        <div data-value="Software">Software</div>
+                        <div data-value="Service">Service</div>
+                        <div data-value="Hardware">Hardware</div>
+                        <div data-value="Other">Other</div>
+                    </div>
+                </div>
+
+                <div class="custom-dropdown" id="statusFilterDropdown" data-current-value="All" style="width: 200px;">
+                    <div class="dropdown-header"><span>All Statuses</span> <span class="iconify" data-icon="ph:caret-down-fill"></span></div>
+                    <div class="dropdown-list">
+                        <div data-value="All">All Statuses</div>
+                        <div data-value="Active">Active</div>
+                        <div data-value="Draft">Draft</div>
+                        <div data-value="Inactive">Inactive</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th data-i18n="products.colName">Product / SKU</th>
+                            <th data-i18n="products.colCategory">Category</th>
+                            <th data-i18n="products.colPrice">Price</th>
+                            <th data-i18n="products.colStatus">Status</th>
+                            <th>Actions</th> 
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                        <!-- Gerado via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- MODAL EXPORTAR CSV -->
+    <div class="modal-overlay" id="exportCsvModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><span class="iconify" data-icon="ph:file-csv-fill"></span> Export CSV Data</h3>
+                <button class="btn-close" id="closeExportModal"><span class="iconify" data-icon="ph:x-bold"></span></button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-muted); font-size: 15px; margin-bottom: 24px;" id="exportModalText">Name your file to save your products data offline.</p>
+                <div class="form-group">
+                    <label class="form-label">File Name</label>
+                    <input type="text" id="csvFileNameInput" class="form-control" placeholder="e.g. NexusCRM_Products">
+                </div>
+                <div style="margin-top: 32px; display: flex; justify-content: flex-end; gap: 16px;">
+                    <button class="btn-outline" id="cancelExportBtn">Cancel</button>
+                    <button class="btn-primary" id="confirmExportBtn"><span class="iconify" data-icon="ph:download-simple-fill"></span> Download</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CRUD PRODUTOS -->
+    <div class="modal-overlay" id="crudProductModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3 class="modal-title" id="productModalTitle"><span class="iconify" data-icon="ph:box-cube-fill"></span> Add New Product</h3>
+                <button class="btn-close" id="closeProductModal"><span class="iconify" data-icon="ph:x-bold"></span></button>
+            </div>
+            <div class="modal-body">
+                <form id="formCreateProduct">
+                    <input type="hidden" id="hiddenProductId" value="">
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Product/Service Name</label>
+                            <input type="text" id="productName" class="form-control" placeholder="e.g. Pro Subscription" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">SKU / Identifier (Optional)</label>
+                            <input type="text" id="productSKU" class="form-control" placeholder="e.g. PRD-001">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <div class="custom-dropdown" id="productCategoryDropdown" data-current-value="Software">
+                                <div class="dropdown-header"><span>Software</span> <span class="iconify" data-icon="ph:caret-down-fill"></span></div>
+                                <div class="dropdown-list">
+                                    <div data-value="Software">Software</div>
+                                    <div data-value="Service">Service</div>
+                                    <div data-value="Hardware">Hardware</div>
+                                    <div data-value="Other">Other</div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="productCategory" value="Software">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Price / Value ($)</label>
+                            <input type="number" id="productPrice" class="form-control" placeholder="500" required step="0.01">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <div class="custom-dropdown" id="productStatusDropdown" data-current-value="Active">
+                            <div class="dropdown-header"><span>Active</span> <span class="iconify" data-icon="ph:caret-down-fill"></span></div>
+                            <div class="dropdown-list">
+                                <div data-value="Active">Active</div>
+                                <div data-value="Draft">Draft</div>
+                                <div data-value="Inactive">Inactive</div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="productStatus" value="Active">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description (Optional)</label>
+                        <textarea id="productDesc" class="form-control" rows="3" placeholder="Brief details about this product..."></textarea>
+                    </div>
+
+                    <div style="margin-top: 40px; display: flex; justify-content: flex-end; gap: 16px;">
+                        <button type="button" class="btn-outline" id="cancelProductBtn">Cancel</button>
+                        <button type="submit" class="btn-primary" id="saveProductBtn">Save Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/products.js"></script>
+</body>
+</html>

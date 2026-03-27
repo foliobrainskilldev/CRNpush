@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="app.title">CRM Dashboard - Clients</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+</head>
+<body>
+
+    <div class="layout">
+        <!-- Sidebar Dinâmica -->
+        <div id="sidebar-placeholder"></div>
+
+        <main class="main-content">
+            <!-- Topbar Dinâmica -->
+            <div id="topbar-placeholder"></div>
+
+            <div class="page-header">
+                <h1 class="page-title" data-i18n="clients.title">Clients Directory</h1>
+                <div class="header-controls">
+                    <button class="btn-outline" id="btnExportClientsCSV" title="Export Clients to CSV">
+                        <span class="iconify" data-icon="ph:file-csv-fill"></span> Export CSV
+                    </button>
+                    <button class="btn-primary" id="btnOpenAddClient">
+                        <span class="iconify" data-icon="ph:plus-bold"></span> <span data-i18n="clients.addBtn">Add Client</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="filters-container">
+                <input type="text" id="searchClient" class="filter-input" data-i18n-placeholder="clients.searchPlaceholder" placeholder="Search by name or company..." style="width: 250px;">
+                
+                <div class="custom-dropdown" id="statusFilterDropdown" data-current-value="All" style="width: 200px;">
+                    <div class="dropdown-header"><span data-i18n="clients.filterAll">All Statuses</span> <span class="iconify" data-icon="ph:caret-down-fill"></span></div>
+                    <div class="dropdown-list">
+                        <div data-value="All" data-i18n="clients.filterAll">All Statuses</div>
+                        <div data-value="Active" data-i18n="clients.filterActive">Active</div>
+                        <div data-value="Inactive" data-i18n="clients.filterInactive">Inactive</div>
+                        <div data-value="VIP" data-i18n="clients.filterVIP">VIP</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th data-i18n="clients.colCompany">Company / Name</th>
+                            <th data-i18n="clients.colContact">Main Contact</th>
+                            <th data-i18n="clients.colEmail">Email</th>
+                            <th data-i18n="clients.colStatus">Status</th>
+                            <th>Actions</th> 
+                        </tr>
+                    </thead>
+                    <tbody id="clientsTableBody">
+                        <!-- Clientes inseridos via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container"></div>
+
+    <!-- MODAL EXPORTAR CSV -->
+    <div class="modal-overlay" id="exportCsvModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><span class="iconify" data-icon="ph:file-csv-fill"></span> Export CSV Data</h3>
+                <button class="btn-close" id="closeExportModal"><span class="iconify" data-icon="ph:x-bold"></span></button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-muted); font-size: 15px; margin-bottom: 24px;" id="exportModalText">Name your file to save your clients data offline.</p>
+                <div class="form-group">
+                    <label class="form-label">File Name</label>
+                    <input type="text" id="csvFileNameInput" class="form-control" placeholder="e.g. NexusCRM_Data">
+                </div>
+                <div style="margin-top: 32px; display: flex; justify-content: flex-end; gap: 16px;">
+                    <button class="btn-outline" id="cancelExportBtn">Cancel</button>
+                    <button class="btn-primary" id="confirmExportBtn"><span class="iconify" data-icon="ph:download-simple-fill"></span> Download</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CRUD CLIENTES -->
+    <div class="modal-overlay" id="crudClientModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3 class="modal-title" id="clientModalTitle"><span class="iconify" data-icon="ph:buildings-fill"></span> Add New Client</h3>
+                <button class="btn-close" id="closeClientModal"><span class="iconify" data-icon="ph:x-bold"></span></button>
+            </div>
+            <div class="modal-body">
+                <form id="formCreateClient">
+                    <input type="hidden" id="hiddenClientId" value="">
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Company Name</label>
+                            <input type="text" id="clientName" class="form-control" placeholder="e.g. Acme Corp" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Main Contact Name</label>
+                            <input type="text" id="clientContact" class="form-control" placeholder="e.g. Alice Smith" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" id="clientEmail" class="form-control" placeholder="contact@company.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" id="clientPhone" class="form-control" placeholder="+1 555-0000" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Client Status</label>
+                        <div class="custom-dropdown" id="clientStatusDropdown" data-current-value="Active">
+                            <div class="dropdown-header"><span>Active</span> <span class="iconify" data-icon="ph:caret-down-fill"></span></div>
+                            <div class="dropdown-list">
+                                <div data-value="Active">Active</div>
+                                <div data-value="VIP">VIP</div>
+                                <div data-value="Inactive">Inactive</div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="clientStatus" value="Active">
+                    </div>
+
+                    <div style="margin-top: 40px; display: flex; justify-content: flex-end; gap: 16px;">
+                        <button type="button" class="btn-outline" id="cancelClientBtn">Cancel</button>
+                        <button type="submit" class="btn-primary" id="saveClientBtn">Save Client</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="js/data.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/clients.js"></script>
+</body>
+</html>
