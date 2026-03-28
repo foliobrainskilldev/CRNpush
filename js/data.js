@@ -52,14 +52,30 @@ window.crmData = {
     ],
     translations: {
         en: {
-            "app.title": "NexusCRM Dashboard", "app.processing": "Processing...", "sidebar.dashboard": "Dashboard", "sidebar.clients": "Clients",
-            "sidebar.leads": "Leads", "sidebar.deals": "Deals", "sidebar.tasks": "Tasks", "sidebar.products": "Products",
-            "topbar.search": "Search across CRM..."
+            "app.title": "NexusCRM Dashboard", 
+            "app.processing": "Processing...", 
+            "sidebar.dashboard": "Dashboard", 
+            "sidebar.clients": "Clients",
+            "sidebar.leads": "Leads", 
+            "sidebar.deals": "Deals", 
+            "sidebar.tasks": "Tasks", 
+            "sidebar.products": "Products",
+            "topbar.search": "Search across CRM...",
+            "dashboard.greeting": "Welcome back, John",
+            "dashboard.subtitle": "Here is what's happening today."
         },
         pt: {
-            "app.title": "NexusCRM Painel", "app.processing": "A Processar...", "sidebar.dashboard": "Painel Principal", "sidebar.clients": "Clientes",
-            "sidebar.leads": "Prospectos", "sidebar.deals": "Negócios", "sidebar.tasks": "Tarefas", "sidebar.products": "Produtos",
-            "topbar.search": "Pesquisar no CRM..."
+            "app.title": "NexusCRM Painel", 
+            "app.processing": "A Processar...", 
+            "sidebar.dashboard": "Painel Principal", 
+            "sidebar.clients": "Clientes",
+            "sidebar.leads": "Prospectos", 
+            "sidebar.deals": "Negócios", 
+            "sidebar.tasks": "Tarefas", 
+            "sidebar.products": "Produtos",
+            "topbar.search": "Pesquisar no CRM...",
+            "dashboard.greeting": "Bem-vindo de volta, John",
+            "dashboard.subtitle": "Aqui está o que está a acontecer hoje."
         }
     }
 };

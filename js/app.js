@@ -295,7 +295,7 @@ window.app = {
 
     setManagerAvatar: function() {
         document.querySelectorAll('.avatar').forEach(av => {
-            av.innerHTML = `<img src="${this.getUnsplashAvatar('Gestor Principal', 'person')}" alt="Manager" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+            av.innerHTML = `<img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=faces&auto=format&q=80" alt="John" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
         });
     },
 
