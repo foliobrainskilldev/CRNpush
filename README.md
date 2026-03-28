@@ -1,6 +1,6 @@
 # 🚀 NexusCRM (CRNpush)
 
-![NexusCRM Banner](https://via.placeholder.com/1200x400/4318ff/ffffff?text=NexusCRM+-+Modern+Vanilla+JS+CRM)
+![NexusCRM Banner](https://i.ibb.co/YCwzLzT/cr-npush-vercel-app-1024x768desktop-ce2962.jpg)
 
 > Um painel de CRM (Customer Relationship Management) moderno, rápido e responsivo construído inteiramente com **Vanilla JavaScript**, **HTML5** e **CSS3**. Focado em alta performance, UI/UX premium e funcionamento *offline-first* utilizando **IndexedDB**.
 
