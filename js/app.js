@@ -1,6 +1,3 @@
-// ==========================================
-// 1. UTILITÁRIOS DE UI (LOADER, TOAST, MODAL)
-// ==========================================
 window.showLoader = function() {
     let loader = document.getElementById('globalLoader');
     if(!loader) {
@@ -54,7 +51,7 @@ window.customConfirm = function(message, title = "Confirm", isPt = false) {
         const btnAccept = document.getElementById('btnConfirmAccept');
         
         btnCancel.innerText = isPt ? "Cancelar" : "Cancel";
-        if(title.includes("Delete") || title.includes("Eliminar") || title.includes("Remover")) {
+        if(title.includes("Delete") || title.includes("Eliminar") || title.includes("Remover") || title.includes("APAGAR") || title.includes("WIPE")) {
             btnAccept.innerText = isPt ? "Eliminar" : "Delete";
         } else {
             btnAccept.innerText = isPt ? "Confirmar" : "Confirm";
@@ -73,18 +70,13 @@ window.customConfirm = function(message, title = "Confirm", isPt = false) {
     });
 };
 
-// ==========================================
-// 2. INJEÇÃO DINÂMICA DE COMPONENTES HTML
-// ==========================================
 window.loadComponents = async function() {
     try {
-        // 1. Sidebar Dinâmica
         const sidebarPlaceholder = document.getElementById('sidebar-placeholder');
         if (sidebarPlaceholder) {
             const res = await fetch('components/sidebar.html');
             sidebarPlaceholder.outerHTML = await res.text();
 
-            // Identificar a página atual e ativar o link correto
             const currentPath = window.location.pathname.split('/').pop() || 'index.html';
             document.querySelectorAll('.nav-menu a').forEach(link => {
                 link.classList.remove('active');
@@ -92,14 +84,12 @@ window.loadComponents = async function() {
             });
         }
 
-        // 2. Topbar Dinâmica
         const topbarPlaceholder = document.getElementById('topbar-placeholder');
         if (topbarPlaceholder) {
             const res = await fetch('components/topbar.html');
             topbarPlaceholder.outerHTML = await res.text();
         }
 
-        // 3. Modal de Confirmação Global (injetado via JS para não poluir o HTML)
         if (!document.getElementById('confirmModal')) {
             const modalHtml = `
             <div class="modal-overlay" id="confirmModal">
@@ -116,14 +106,35 @@ window.loadComponents = async function() {
             document.body.insertAdjacentHTML('beforeend', modalHtml);
         }
 
+        if (!document.getElementById('globalExportCsvModal')) {
+            const exportModalHtml = `
+            <div class="modal-overlay" id="globalExportCsvModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title"><span class="iconify" data-icon="ph:file-csv-fill"></span> Export CSV Data</h3>
+                        <button class="btn-close" id="closeGlobalExportModal"><span class="iconify" data-icon="ph:x-bold"></span></button>
+                    </div>
+                    <div class="modal-body">
+                        <p style="color: var(--text-muted); font-size: 15px; margin-bottom: 24px;" id="globalExportModalText">Name your file to save your data offline.</p>
+                        <div class="form-group">
+                            <label class="form-label">File Name</label>
+                            <input type="text" id="globalCsvFileNameInput" class="form-control" placeholder="e.g. NexusCRM_Data">
+                        </div>
+                        <div style="margin-top: 32px; display: flex; justify-content: flex-end; gap: 16px;">
+                            <button class="btn-outline" id="cancelGlobalExportBtn">Cancel</button>
+                            <button class="btn-primary" id="confirmGlobalExportBtn"><span class="iconify" data-icon="ph:download-simple-fill"></span> Download</button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+            document.body.insertAdjacentHTML('beforeend', exportModalHtml);
+        }
+
     } catch (err) {
         console.error("Erro ao carregar componentes:", err);
     }
 };
 
-// ==========================================
-// 3. DROPDOWNS CUSTOMIZADOS
-// ==========================================
 window.initCustomDropdowns = function() {
     const dropdowns = document.querySelectorAll('.custom-dropdown');
     dropdowns.forEach(dropdown => {
@@ -169,9 +180,6 @@ window.closeAllDropdowns = function() {
     document.querySelectorAll('.dropdown-list').forEach(l => l.classList.remove('show'));
 };
 
-// ==========================================
-// 4. NOTIFICAÇÕES GLOBAIS
-// ==========================================
 window.refreshNotificationsList = async function() {
     const list = document.getElementById('notifList');
     if(!list) return;
@@ -214,9 +222,6 @@ window.bindNotificationsPanel = async function() {
     await window.refreshNotificationsList();
 };
 
-// ==========================================
-// 5. BUSCA GLOBAL
-// ==========================================
 window.bindGlobalSearch = function() {
     const input = document.getElementById('globalSearchInput');
     const resultsBox = document.getElementById('globalSearchResults');
@@ -254,9 +259,6 @@ window.bindGlobalSearch = function() {
     });
 };
 
-// ==========================================
-// 6. OBJETO PRINCIPAL (APP INIT)
-// ==========================================
 window.app = {
     currentLang: 'en',
     currentTheme: 'light',
@@ -264,7 +266,6 @@ window.app = {
     init: async function() {
         window.showLoader();
 
-        // Aguarda a injeção do HTML partilhado (Sidebar, Topbar, Modais)
         await window.loadComponents();
 
         this.initTheme();
@@ -277,7 +278,6 @@ window.app = {
         window.bindGlobalSearch();
         window.bindNotificationsPanel();
 
-        // Dispara um evento para avisar as páginas (ex: clients.js) que o HTML está pronto!
         window.dispatchEvent(new Event('componentsLoaded'));
     },
 
@@ -356,7 +356,6 @@ window.app = {
         this.currentLang = this.currentLang === 'en' ? 'pt' : 'en';
         this.applyTranslations();
         
-        // Refresca o Dashboard se ele existir, senão esconde o loader
         if (typeof initDashboard === 'function') initDashboard(); else window.hideLoader();
     },
 
@@ -382,3 +381,67 @@ window.app = {
 };
 
 document.addEventListener('DOMContentLoaded', () => { window.app.init(); });
+
+window.openExportModal = function(defaultFileName, descriptionText, descriptionTextPt, exportCallback) {
+    const modal = document.getElementById('globalExportCsvModal');
+    const input = document.getElementById('globalCsvFileNameInput');
+    const desc = document.getElementById('globalExportModalText');
+    const btnCancel = document.getElementById('cancelGlobalExportBtn');
+    const btnConfirm = document.getElementById('confirmGlobalExportBtn');
+    const btnClose = document.getElementById('closeGlobalExportModal');
+
+    const lang = window.app ? window.app.currentLang : 'en';
+    desc.innerText = lang === 'pt' && descriptionTextPt ? descriptionTextPt : descriptionText;
+    btnCancel.innerText = lang === 'pt' ? "Cancelar" : "Cancel";
+
+    input.value = defaultFileName;
+    modal.classList.add('active');
+
+    const cleanup = () => {
+        modal.classList.remove('active');
+        btnCancel.onclick = null;
+        btnConfirm.onclick = null;
+        btnClose.onclick = null;
+    };
+
+    btnCancel.onclick = cleanup;
+    btnClose.onclick = cleanup;
+
+    btnConfirm.onclick = async () => {
+        let fileName = input.value.trim() || 'NexusCRM_Data';
+        if (!fileName.toLowerCase().endsWith('.csv')) fileName += '.csv';
+        
+        window.showLoader();
+        
+        try {
+            await new Promise(r => setTimeout(r, 700)); 
+            await exportCallback(fileName);
+            cleanup();
+            window.hideLoader();
+            setTimeout(() => window.showToast(lang === 'pt' ? "Exportação concluída!" : "Export completed successfully!", "success"), 200);
+        } catch (err) {
+            console.error(err);
+            window.hideLoader();
+            window.showToast("Export failed.", "error");
+        }
+    };
+};
+
+window.downloadCSV = function(fileName, headers, rowsData) {
+    const csvRows =[headers.join(',')];
+    rowsData.forEach(row => {
+        const values = row.map(val => `"${(val || '').toString().replace(/"/g, '""')}"`);
+        csvRows.push(values.join(','));
+    });
+    
+    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+};

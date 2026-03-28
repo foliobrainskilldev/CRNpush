@@ -21,13 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window.app) window.app.applyTranslations();
     }
 
-    // Apenas inicializar o conteúdo quando os modais/barras globais do app.js estiverem prontos
     window.addEventListener('componentsLoaded', () => {
         bindExportBackup();
         bindImportRestore();
         bindWipeData();
         
-        // CÓDIGO CRUCIAL ADICIONADO AQUI: Desliga a tela de carregamento que foi iniciada pelo app.js
         window.hideLoader(); 
     });
 });

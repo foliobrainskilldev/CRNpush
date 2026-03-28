@@ -4,7 +4,6 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-// Redireciona URLs com .html para a versão limpa
 app.use((req, res, next) => {
     if (req.path.indexOf('.html') >= 0) {
         const cleanPath = req.path.replace(/\.html$/, '');
@@ -14,13 +13,11 @@ app.use((req, res, next) => {
     next();
 });
 
-// Serve os arquivos estáticos (HTML, CSS, JS, etc.)
 app.use(express.static(__dirname, {
     extensions: ['html'], 
     index: 'index.html'
 }));
 
-// Handler para erros 404 (Página Não Encontrada)
 app.use((req, res) => {
     res.status(404);
     res.sendFile(path.join(__dirname, '404.html'), (err) => {
@@ -48,7 +45,6 @@ app.use((req, res) => {
     });
 });
 
-// Inicia o servidor se não estiver em produção (O Vercel lida com isso sozinho na produção)
 if (process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => {
         console.log(`Servidor NexusCRM rodando na porta ${PORT}`);
