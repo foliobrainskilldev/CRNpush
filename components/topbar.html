@@ -1,0 +1,28 @@
+<header class="topbar">
+    <button class="menu-toggle" id="menuToggle"><span class="iconify" data-icon="ph:list-bold"></span></button>
+    
+    <div class="search-container">
+        <div class="search-bar">
+            <span class="iconify" data-icon="ph:magnifying-glass-fill"></span>
+            <input type="text" id="globalSearchInput" data-i18n-placeholder="topbar.search" placeholder="Search across CRM..." autocomplete="off">
+        </div>
+        <div class="global-search-results" id="globalSearchResults"></div>
+    </div>
+
+    <div class="topbar-actions">
+        <button class="icon-btn" id="langToggle" title="Change Language" style="font-size: 26px;">
+            <span class="iconify" id="langFlagIcon" data-icon="flag:us-4x3" style="border-radius: 4px;"></span>
+        </button>
+        <button class="icon-btn" id="themeToggle"><span class="iconify" data-icon="ph:moon-fill"></span></button>
+        <button class="icon-btn" id="btnNotifications">
+            <span class="iconify" data-icon="ph:bell-fill"></span>
+            <div class="notification-badge" id="notifBadge"></div>
+        </button>
+        <div class="avatar">JD</div>
+    </div>
+
+    <div class="notifications-panel" id="notificationsPanel">
+        <div class="notif-header">Notifications <span class="iconify" data-icon="ph:checks-fill" id="markAllReadBtn" style="cursor:pointer; color:var(--primary);" title="Mark all as read"></span></div>
+        <ul class="notif-list" id="notifList"></ul>
+    </div>
+</header>
